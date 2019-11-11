@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), ViewContract , Listener{
 
     lateinit var button_fav: Button
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun createImageDetailFragment(item: ImageData) {
         val transaction = supportFragmentManager.beginTransaction()
@@ -48,8 +49,8 @@ class MainActivity : AppCompatActivity(), ViewContract , Listener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var sharedPreferences: SharedPreferences = getSharedPreferences("Pref", 0)
         button_fav = findViewById(R.id.btn_fav)
+        sharedPreferences = getSharedPreferences("Pref", 0)
         initPresenter()
         initUI()
 

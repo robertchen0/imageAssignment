@@ -1,5 +1,7 @@
 package com.example.imageassignment.view
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,7 @@ import kotlinx.android.synthetic.main.item_layout.view.*
 class CustomAdapter(var dataSet: ArrayList<ImageData>, var listener: Listener) :
     RecyclerView.Adapter<CustomAdapter.CustomViewHolder>(){
 
+    lateinit var sharedPreferences: SharedPreferences
     lateinit var url: String
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder =
@@ -26,6 +29,7 @@ class CustomAdapter(var dataSet: ArrayList<ImageData>, var listener: Listener) :
     override fun getItemCount(): Int = dataSet.size
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
+
         url = dataSet[position].thumbnailUrl
         holder?.updateWithUrl(url)
 

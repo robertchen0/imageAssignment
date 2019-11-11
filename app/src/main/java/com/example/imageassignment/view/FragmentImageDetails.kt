@@ -9,20 +9,24 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.example.imageassignment.R
 import com.example.imageassignment.model.ImageData
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_image_details.*
 import kotlinx.android.synthetic.main.item_layout.*
 
-class FragmentImageDetails: Fragment() {
+class FragmentImageDetails: DialogFragment() {
 
     lateinit var ivImage: ImageView
     lateinit var tvTitle: TextView
     lateinit var dataSet: ImageData
     lateinit var url: String
     lateinit var button_like: Button
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var dialogFragment: DialogFragment
 
     companion object {
 
@@ -45,6 +49,8 @@ class FragmentImageDetails: Fragment() {
         ivImage = view.findViewById(R.id.iv_image_detail)
         tvTitle = view.findViewById(R.id.tv_title_detail)
         button_like = view.findViewById(R.id.btn_like_detail)
+        sharedPreferences = this.getActivity()!!.getSharedPreferences("Pref",0)
+
         return view
     }
 
@@ -54,23 +60,27 @@ class FragmentImageDetails: Fragment() {
         tvTitle.setText(dataSet.title)
         url = dataSet.thumbnailUrl
         Picasso.get().load(url).resize(600, 600).into(ivImage)
+        sharedPreferences = this.getActivity()!!.getSharedPreferences("Pref",0)
+        dialog?.setCanceledOnTouchOutside(true)
+
+        if(sharedPreferences.getBoolean(dataSet.id.toString(),false)){
+            btn_like_detail.setText("Dislike")
+        }
+        else{
+            btn_like_detail.setText("Like")
+        }
 
         button_like.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
-//                var sharedPreferences: SharedPreferences = getSharedPreferences("Pref", 0)
-//                if(sharedPreferences.getBoolean(dataSet.id.toString(), true))
-//                {
-//                    sharedPreferences.edit().putBoolean(dataSet.id.toString(),false).apply()
-//                }
-//                else {
-//                    sharedPreferences.edit().putBoolean(dataSet.id.toString(), true).apply()
-//                }
-                println(dataSet.id)
+                if (sharedPreferences.getBoolean(dataSet.id.toString(), false)) {
+                    sharedPreferences.edit().remove(dataSet.id.toString()).apply()
+                    btn_like_detail.setText("Like")
+                } else {
+                    sharedPreferences.edit().putBoolean(dataSet.id.toString(), true).apply()
+                    btn_like_detail.setText("Dislike")
+                }
             }
         })
-
     }
-
-
-
 }
+
